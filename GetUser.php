@@ -1,17 +1,17 @@
 <?php
 /**
- * Created by PhpStorm.
+ * 根据code获取用户信息
  * User: Marcus
  * Date: 18/11/2
  * Time: 16:17
  */
 
-$user = new getUser($appid, $appsecret);
+$user = new GetUser($params);
 $userInfo = $user->get_user_all();
 echo json_encode($userInfo);
 exit;
 
-class getUser{
+class GetUser{
     private $appid;
     private $appsecret;
 
@@ -19,10 +19,10 @@ class getUser{
      * 构造方法
      * @return mixed
      */
-    public function __construct($appid, $appsecret)
+    public function __construct($params)
     {
-        $this->appid = $appid;
-        $this->appsecret = $appsecret;
+        $this->appid = $params->appID;
+        $this->secrect = $params->appSecret;
     }
 
    /**
