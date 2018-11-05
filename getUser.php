@@ -6,9 +6,7 @@
  * Time: 16:17
  */
 
-require __DIR__ . '/Weixin/common.php';
-
-$user = new getUser();
+$user = new getUser($appid, $appsecret);
 $userInfo = $user->get_user_all();
 echo json_encode($userInfo);
 exit;
@@ -21,10 +19,10 @@ class getUser{
      * 构造方法
      * @return mixed
      */
-    public function __construct()
+    public function __construct($appid, $appsecret)
     {
-        $this->appid = $GLOBALS['PAY_CONFIG']['appid'];
-        $this->appsecret = $GLOBALS['PAY_CONFIG']['appid'];
+        $this->appid = $appid;
+        $this->appsecret = $appsecret;
     }
 
    /**
