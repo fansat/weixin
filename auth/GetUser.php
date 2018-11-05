@@ -6,7 +6,7 @@
  * Time: 16:17
  */
 
-$user = new GetUser($params);
+$user = new GetUser($config);
 $userInfo = $user->get_user_all();
 echo json_encode($userInfo);
 exit;
@@ -19,10 +19,10 @@ class GetUser{
      * 构造方法
      * @return mixed
      */
-    public function __construct($params)
+    public function __construct($config)
     {
-        $this->appid = $params->appID;
-        $this->secrect = $params->appSecret;
+        $this->appid = $config->appID;
+        $this->secrect = $config->appSecret;
     }
 
    /**

@@ -6,7 +6,7 @@
  * Time: 13:49
  */
 
-$msg = new TempMsg($params);
+$msg = new TempMsg($config);
 /*
  * data=>array(
      'first'=>array('value'=>urlencode("您好,您已购买成功"),'color'=>"#743A3A"),
@@ -25,10 +25,10 @@ class TempMsg
     protected $secrect;
     protected $accessToken;
 
-    function __construct($params)
+    function __construct($config)
     {
-        $this->appid = $params->appID;
-        $this->secrect = $params->appSecret;
+        $this->appid = $config->appID;
+        $this->secrect = $config->appSecret;
         $this->accessToken = $this->getToken($appid, $secrect);
     }
     /**
