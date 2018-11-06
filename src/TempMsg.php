@@ -6,6 +6,8 @@
  * Time: 13:49
  */
 
+namespace Wx\Sdk;
+
 $msg = new TempMsg($config);
 /*
  * data=>array(

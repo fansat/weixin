@@ -6,6 +6,8 @@
  * Time: 16:17
  */
 
+namespace Wx\Sdk;
+
 $user = new GetUser($config);
 $userInfo = $user->get_user_all();
 echo json_encode($userInfo);
