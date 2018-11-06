@@ -1,5 +1,5 @@
 {
-    "name": "marcus/dev-sdk",
+    "name": "fansat/dev-sdk",
     "autoload": {
         "psr-4": {
             "Wx\\Sdk\\": "src/"
