@@ -1,5 +1,5 @@
 {
-    "name": "marcus/sdk",
+    "name": "marcusdev/sdk",
     "autoload": {
         "psr-4": {
             "Wx\\Sdk\\": "src/"
