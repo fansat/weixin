@@ -21,17 +21,15 @@ $msg = new TempMsg($config);
 echo $msg->doSend($touser, $template_id, $url, $data, $topcolor = '#7B68EE');
 exit;
 
-class TempMsg
+class tempMsg
 {
     protected $appid;
     protected $secrect;
     protected $accessToken;
 
-    function __construct($config)
+    function __construct($params)
     {
-        $this->appid = $config->appID;
-        $this->secrect = $config->appSecret;
-        $this->accessToken = $this->getToken($appid, $secrect);
+        $this->accessToken = $this->getToken($params->appID, $params->appSecret);
     }
     /**
      * 发送post请求
@@ -44,14 +42,14 @@ class TempMsg
         if (empty($url) || empty($param)) {
             return false;
         }
-        $postUrl = $url;
-        $curlPost = $param;
         $ch = curl_init(); //初始化curl
-        curl_setopt($ch, CURLOPT_URL, $postUrl); //抓取指定网页
-        curl_setopt($ch, CURLOPT_HEADER, 0); //设置header
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //要求结果为字符串且输出到屏幕上
-        curl_setopt($ch, CURLOPT_POST, 1); //post提交方式
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
+        curl_setopt($ch, CURLOPT_URL, $url); //抓取指定网页
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $param);
         $data = curl_exec($ch); //运行curl
         curl_close($ch);
         return $data;
@@ -68,7 +66,10 @@ class TempMsg
         }
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         $data = curl_exec($ch);
         curl_close($ch);
         return $data;
@@ -81,18 +82,12 @@ class TempMsg
      */
     protected function getToken($appid, $appsecret)
     {
-        /*
-         if (S($appid)) {
-        $access_token = S($appid);
-        } else {*/
+
         $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . $appid . "&secret=" . $appsecret;
         $token = $this->request_get($url);
-        $token = json_decode(stripslashes($token));
-        $arr = json_decode(json_encode($token), true);
+        $arr = json_decode($token, true);
         $access_token = $arr['access_token'];
 
-        // S($appid, $access_token, 720);
-        //}
         return $access_token;
 
     }
@@ -124,8 +119,8 @@ class TempMsg
         $json_template = json_encode($template);
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" . $this->accessToken;
 
-
         $dataRes = $this->request_post($url, urldecode($json_template));
+
         if ($dataRes['errcode'] == 0) {
             return true;
         } else {
