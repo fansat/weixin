@@ -21,15 +21,17 @@ $msg = new TempMsg($config);
 echo $msg->doSend($touser, $template_id, $url, $data, $topcolor = '#7B68EE');
 exit;
 
-class tempMsg
+class TempMsg
 {
-    protected $appid;
-    protected $secrect;
-    protected $accessToken;
+    public $appid;
+    public $secrect;
+    public $accessToken;
 
-    function __construct($params)
+    public function __construct($params)
     {
-        $this->accessToken = $this->getToken($params->appID, $params->appSecret);
+        $this->appid = $params->appID;
+        $this->secrect = $params->appSecret;
+        $this->accessToken = $this->getToken($this->appid, $this->secrect);
     }
     /**
      * 发送post请求
@@ -37,7 +39,7 @@ class tempMsg
      * @param string $param
      * @return bool|mixed
      */
-    function request_post($url = '', $param = '')
+    public function request_post($url = '', $param = '')
     {
         if (empty($url) || empty($param)) {
             return false;
@@ -59,7 +61,7 @@ class tempMsg
      * @param string $url
      * @return bool|mixed
      */
-    function request_get($url = '')
+    public function request_get($url = '')
     {
         if (empty($url)) {
             return false;
@@ -80,15 +82,13 @@ class tempMsg
      * @return mixed
      * 获取token
      */
-    protected function getToken($appid, $appsecret)
+    public function getToken($appid, $secrect)
     {
 
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . $appid . "&secret=" . $appsecret;
+        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . $appid . "&secret=" . $secrect;
         $token = $this->request_get($url);
-        $arr = json_decode($token, true);
-        $access_token = $arr['access_token'];
-
-        return $access_token;
+        $result = json_decode($token, true);
+        return $result['access_token'];
 
     }
     /**
@@ -100,7 +100,7 @@ class tempMsg
      * @param string $topcolor
      * @return bool
      */
-    public function doSend($touser, $template_id, $url, $data, $topcolor = '#7B68EE')
+    public function doSend($touser, $template_id, $url, $data, $topcolor = '#000000')
     {
         /*
          * data=>array(
@@ -120,8 +120,8 @@ class tempMsg
         $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" . $this->accessToken;
 
         $dataRes = $this->request_post($url, urldecode($json_template));
-
-        if ($dataRes['errcode'] == 0) {
+        $res = json_decode($dataRes, true);
+        if ($res['errcode'] == 0) {
             return true;
         } else {
             return false;
